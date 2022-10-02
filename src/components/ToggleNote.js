@@ -1,12 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-function ToggleNote({ toggleCaption, onShowArchive }) {
+function ToggleNote({ toggleCaption, link }) {
   return (
     <div className="note-toggle">
-      <a href="/#" onClick={(event) => onShowArchive(event, toggleCaption)}>
+      <Link to={link}>
         <span>{toggleCaption}</span>
         <img src="./images/pileofnotes.png" alt="pile of notes" />
-      </a>
+      </Link>
     </div>
   );
 }

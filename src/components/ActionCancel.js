@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ActionCancel ({toolTipAction, id, onDelete}) {
   return (
     <div className="action action-cancel tooltip" data-tooltip={toolTipAction}>
-      <a href="/#" onClick={(event) => {onDelete(event, id)}}>
+      <Link to="/" onClick={(event) => {onDelete(event, id)}}>
         <svg viewBox="0 0 32 32" fill="none">
           <path
             fillRule="evenodd"
@@ -12,7 +13,7 @@ function ActionCancel ({toolTipAction, id, onDelete}) {
             fill="#C21C4A"
           />
         </svg>
-      </a>
+      </Link>
     </div>
   );
 }

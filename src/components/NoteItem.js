@@ -8,34 +8,17 @@ function NoteItem({
   title,
   archived,
   style,
-  archiveClass,
-  basicNoteClass,
+  noteClass,
   foundClass,
   onShowNote,
   onDelete,
   onArchive,
 }) {
   const noteBodyClass = "note " + style;
-  archiveClass = archiveClass + " " + foundClass;
-  basicNoteClass = basicNoteClass + " " + foundClass
+  noteClass = noteClass + " " + foundClass;
 
-  return !archived ? (
-    <div className={basicNoteClass}>
-      <NoteItemBody
-        id={id}
-        title={title}
-        classTag={noteBodyClass}
-        onShowNote={onShowNote}
-      />
-      <DeleteNote id={id} onDelete={onDelete} />
-      <ArchiveNote
-        id={id}
-        archived={archived}
-        onArchive={onArchive}
-      />
-    </div>
-  ) : (
-    <div className={archiveClass}>
+  return (
+    <div className={noteClass}>
       <NoteItemBody
         id={id}
         title={title}

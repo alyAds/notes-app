@@ -9,7 +9,7 @@ function Overlay ({note, toolTipAction, toggleOverlay, closeOverlay, onDelete, o
     <div className={toggleOverlay}>
       <div className="overlay-form">
         <div className="actions">
-          <ActionCancel id={note.id} onDelete={onDelete} toolTipAction={toolTipAction}  />
+          {note.id === '' ? '' : <ActionCancel id={note.id} onDelete={onDelete} toolTipAction={toolTipAction}  />}
           {note.id === '' ? '' : <ActionArchive id={note.id} archived={note.archived} onArchive={onArchive} />}
           <ActionClose closeOverlay={closeOverlay} />
         </div>
