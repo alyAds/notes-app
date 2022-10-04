@@ -423,6 +423,11 @@ footer .note-add svg {
   width: 38px;
 }
 
+.actions button {
+  border: none;
+  cursor: pointer;
+}
+
 .action-pin svg path:first-child {
   fill: #BEBFD9;
 }

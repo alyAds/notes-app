@@ -16,9 +16,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 
-function AddEditPageWrapper() {
+function AddEditPageWrapper({onDelete}) {
   const { id } = useParams();
-  return <AddEditPage id={id} />
+  return <AddEditPage id={id} onDelete={onDelete} overlayClass="overlay overlay-note-edit" />
 }
 
 class AddEditPage extends React.Component {
@@ -159,14 +159,12 @@ class AddEditPage extends React.Component {
       <>
         <Overlay
           note={this.state.note}
-          toggleOverlay="overlay overlay-note-add"
-          toolTipAction="Cancel"
+          overlayClass={this.props.overlayClass}
           onDelete={this.onDeleteHandler}
           onArchive={this.onArchiveHandler}
           onSubmitNote={this.onSubmitNoteHandler}
           onChangeTitle={this.onChangeTitleHandler}
           onChangeBody={this.onChangeBodyHandler}
-          closeOverlay={this.props.onToggleOverlay}
         />
       </>
     );

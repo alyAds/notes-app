@@ -35,7 +35,6 @@ class ArchivePage extends React.Component {
           notes={this.state.notes}
           toggleCaption="NOTEs"
           noteClass="note-item note-item-archive"
-          onShowNote={this.props.onShowNote}
           onDelete={this.onDeleteHandler}
           onArchive={this.onArchiveHandler}
         />

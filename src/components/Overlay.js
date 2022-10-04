@@ -4,14 +4,14 @@ import ActionCancel from "./ActionCancel.js";
 import ActionArchive from "./ActionArchive.js";
 import ActionClose from "./ActionClose.js";
 
-function Overlay ({note, toolTipAction, toggleOverlay, closeOverlay, onDelete, onArchive, onChangeTitle, onSubmitNote, onChangeBody}) {
+function Overlay ({note, overlayClass, onDelete, onArchive, onChangeTitle, onSubmitNote, onChangeBody}) {
   return (
-    <div className={toggleOverlay}>
+    <div className={overlayClass}>
       <div className="overlay-form">
         <div className="actions">
-          {note.id === '' ? '' : <ActionCancel id={note.id} onDelete={onDelete} toolTipAction={toolTipAction}  />}
+          {note.id === '' ? '' : <ActionCancel id={note.id} onDelete={onDelete} />}
           {note.id === '' ? '' : <ActionArchive id={note.id} archived={note.archived} onArchive={onArchive} />}
-          <ActionClose closeOverlay={closeOverlay} />
+          <ActionClose />
         </div>
         <NoteInput onChangeTitle={onChangeTitle} onChangeBody={onChangeBody} onSubmitNote={onSubmitNote} {...note}/>
       </div>

@@ -10,7 +10,6 @@ function NoteItem({
   style,
   noteClass,
   foundClass,
-  onShowNote,
   onDelete,
   onArchive,
 }) {
@@ -23,7 +22,6 @@ function NoteItem({
         id={id}
         title={title}
         classTag={noteBodyClass}
-        onShowNote={onShowNote}
       />
       <DeleteNote id={id} onDelete={onDelete} />
       <ArchiveNote

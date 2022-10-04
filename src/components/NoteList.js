@@ -1,7 +1,7 @@
 import React from "react";
 import NoteItem from "./NoteItem";
 
-function NoteList({ notes, toggleCaption, noteClass, onShowNote, onDelete, onArchive }) {
+function NoteList({ notes, toggleCaption, noteClass, onDelete, onArchive }) {
   const countNote = notes.length; // archive or not
   let messageEmpty = "";
   let notesClass = "notes";
@@ -23,7 +23,6 @@ function NoteList({ notes, toggleCaption, noteClass, onShowNote, onDelete, onArc
           key={note.id}
           id={note.id}
           noteClass={noteClass}
-          onShowNote={onShowNote}
           onDelete={onDelete}
           onArchive={onArchive}
           {...note}

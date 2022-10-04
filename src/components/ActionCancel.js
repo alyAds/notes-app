@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function ActionCancel ({toolTipAction, id, onDelete}) {
+function ActionCancel ({id, onDelete}) {
+  const navigate = useNavigate();
+
   return (
-    <div className="action action-cancel tooltip" data-tooltip={toolTipAction}>
-      <Link to="/" onClick={(event) => {onDelete(event, id)}}>
+    <div className="action action-cancel tooltip" data-tooltip="Delete">
+      <button onClick={(event) => {onDelete(event, id); navigate(-1)}}>
         <svg viewBox="0 0 32 32" fill="none">
           <path
             fillRule="evenodd"
@@ -13,7 +15,7 @@ function ActionCancel ({toolTipAction, id, onDelete}) {
             fill="#C21C4A"
           />
         </svg>
-      </Link>
+      </button>
     </div>
   );
 }

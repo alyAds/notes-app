@@ -106,7 +106,7 @@ function addNote(data) {
 function deleteNote(obj, event, id) {
   const noteDelete = getNote(id);
   notes = notes.filter((note) => note.id !== id);
-  obj.props.onDelete(event, "warn", `Catatan ${noteDelete.title} berhasil dihapus!`);
+  obj.props.onDelete("warn", `Catatan ${noteDelete.title} berhasil dihapus!`);
   event.preventDefault();
 }
 
