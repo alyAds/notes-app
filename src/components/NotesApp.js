@@ -1,9 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SearchBar from "./SearchBar.js";
-import HomePage from "../pages/HomePage.js";
 import { AddEditPage, AddEditPageWrapper } from "../pages/AddEditPage.js";
-import ArchivePage from "../pages/ArchivePage.js";
 import ArchiveHomePage from "../pages/ArchiveHomePage.js";
 import ButtonPopUpOverlay from "./ButtonPopUpOverlay.js";
 import { getAllNotes } from "../utils/data.js";
