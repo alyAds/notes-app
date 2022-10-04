@@ -1,23 +1,11 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
-
-function SearchBarWrapper({filterNotes}) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const title = searchParams.get('title');
-
-  function changeSearchParams(title) {
-    setSearchParams({ title })
-  }
-
-  return <SearchBar filterNotes={filterNotes} defaultKeyword={title} keywordChange={changeSearchParams} />
-}
 
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      search: props.defaultKeyword || "",
+      search: props.defaultKeyword,
       inputClass: '',
     };
 
@@ -34,7 +22,6 @@ class SearchBar extends React.Component {
     });
 
     this.props.filterNotes(keyword);
-    this.props.keywordChange(keyword);
   }
 
   render() {
@@ -66,4 +53,4 @@ class SearchBar extends React.Component {
   }
 }
 
-export default SearchBarWrapper;
+export default SearchBar;

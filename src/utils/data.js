@@ -60,35 +60,37 @@ function getArchivedNotes() {
 
 function getFilterNotes(obj) {
   const notes = obj.props.show === "archive" ? getArchivedNotes() : getActiveNotes();
-    const keyword = obj.props.keyword;
+  const keyword = obj.props.title || obj.props.keyword;
 
-    const filterNotes = notes.map(
-      ({ id, title, body, style, archived, createdAt }) => {
-        if (title.toLowerCase().includes(keyword)) {
-          return {
-            id,
-            title,
-            body,
-            style,
-            archived,
-            createdAt,
-            foundClass: "",
-          };
-        } else {
-          return {
-            id,
-            title,
-            body,
-            style,
-            archived,
-            createdAt,
-            foundClass: "note-item-filter",
-          };
-        }
+  obj.props.keywordChange(obj.props.title || obj.props.keyword);
+
+  const filterNotes = notes.map(
+    ({ id, title, body, style, archived, createdAt }) => {
+      if (title.toLowerCase().includes(keyword)) {
+        return {
+          id,
+          title,
+          body,
+          style,
+          archived,
+          createdAt,
+          foundClass: "",
+        };
+      } else {
+        return {
+          id,
+          title,
+          body,
+          style,
+          archived,
+          createdAt,
+          foundClass: "note-item-filter",
+        };
       }
-    );
+    }
+  );
 
-    return { notes: filterNotes };
+  return { notes: filterNotes };
 }
 
 function addNote(data) {
@@ -147,6 +149,22 @@ function stringDateTime(datetime) {
   return `${year}-${month}-${date} ${hours}:${minute}:${second}`;
 }
 
+function controlSearchParams(useSearchParams) {
+  const [searchParams, setSearchParams] = useSearchParams;
+  const title = searchParams.get("title");
+
+  function changeSearchParams(title) {
+    if (title) {
+      setSearchParams({ title })
+    } else {
+      searchParams.delete("title");
+      setSearchParams(searchParams);
+    }
+  }
+
+  return {title, changeSearchParams}
+}
+
 export {
   getAllNotes,
   getActiveNotes,
@@ -159,5 +177,6 @@ export {
   addNote,
   getFilterNotes,
   stringDateTime,
+  controlSearchParams,
   note
 };

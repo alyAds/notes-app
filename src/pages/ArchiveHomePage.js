@@ -1,16 +1,22 @@
 import React from "react";
 import NoteList from "../components/NoteList.js";
 import ToggleNote from "../components/ToggleNote.js";
+import { useSearchParams } from "react-router-dom";
 import {
-  getArchivedNotes,
-  getActiveNotes,
   getFilterNotes,
   archiveNote,
   unarchiveNote,
   deleteNote,
+  controlSearchParams,
 } from "../utils/data.js";
 
-class ArchiveHomepage extends React.Component {
+function ArchiveHomepage(props) {
+  const {title, changeSearchParams} = controlSearchParams(useSearchParams());
+
+  return <ArchiveHomepageChild {...props} title={title} keywordChange={changeSearchParams} />
+}
+
+class ArchiveHomepageChild extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,13 +35,13 @@ class ArchiveHomepage extends React.Component {
   onDeleteHandler(event, id) {
     deleteNote(this, event, id);
 
-    this.setState({ notes: this.props.show === "archive" ? getArchivedNotes() : getActiveNotes() });
+    this.setState(getFilterNotes(this));
   }
 
   onArchiveHandler(e, id) {
     this.props.show === "archive" ? unarchiveNote(id) : archiveNote(id);
 
-    this.setState({ notes: this.props.show === "archive" ? getArchivedNotes() : getActiveNotes() });
+    this.setState(getFilterNotes(this));
     e.preventDefault();
   }
 

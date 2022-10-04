@@ -1,19 +1,27 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import SearchBarWrapper from "./SearchBar.js";
+import { Routes, Route, useSearchParams } from "react-router-dom";
+import SearchBar from "./SearchBar.js";
 import { AddEditPage, AddEditPageWrapper } from "../pages/AddEditPage.js";
 import ArchiveHomePage from "../pages/ArchiveHomePage.js";
 import ButtonPopUpOverlay from "./ButtonPopUpOverlay.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { controlSearchParams } from "../utils/data.js";
 
+function NotesApp({ filterNotes }) {
+  const {title, changeSearchParams} = controlSearchParams(useSearchParams());
 
-class NotesApp extends React.Component {
+  return (
+    <NotesAppChild defaultKeyword={title} keywordChange={changeSearchParams} />
+  );
+}
+
+class NotesAppChild extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      keyword: ""
+      keyword: props.defaultKeyword || "",
     };
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -25,7 +33,8 @@ class NotesApp extends React.Component {
   }
 
   onFilterNotesHandler(keyword) {
-    this.setState({keyword});
+    this.setState({ keyword });
+    this.props.keywordChange(keyword);
   }
 
   render() {
@@ -33,7 +42,10 @@ class NotesApp extends React.Component {
       <div className="notes-app">
         <header>
           <h1>Note</h1>
-          <SearchBarWrapper filterNotes={this.onFilterNotesHandler} />
+          <SearchBar
+            defaultKeyword={this.state.keyword}
+            filterNotes={this.onFilterNotesHandler}
+          />
         </header>
         <div className="body">
           <Routes>
