@@ -1,44 +1,3 @@
-let getData = () => {
-  return [
-    {
-      id: 1,
-      title: "Biaya Hidup",
-      body: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum.",
-      archived: false,
-      style: "note-1",
-      foundClass: '',
-      createdAt: '2022-04-14 04:27:34',
-    },
-    {
-      id: 2,
-      title: "Renungan hati",
-      body: "Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum. Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-      archived: true,
-      style: "note-2",
-      foundClass: '',
-      createdAt: '2022-04-14 04:27:34',
-    },
-    {
-      id: 3,
-      title: "Wajib lakukan hal ini diumur 20-an",
-      body: "Vel, porro illum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum?",
-      archived: true,
-      style: "note-3",
-      foundClass: '',
-      createdAt: '2022-04-14 04:27:34',
-    },
-    {
-      id: 4,
-      title: "Makan ini bermanfaat",
-      body: "Vel, porro illum. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-      archived: false,
-      style: "note-2",
-      foundClass: '',
-      createdAt: '2022-04-14 04:27:34',
-    },
-  ];
-};
-
 let notes = [
   {
     id: 1,
@@ -97,6 +56,39 @@ function getActiveNotes() {
 function getArchivedNotes() {
   const archivedNotes = notes.filter((note) => note.archived);
   return archivedNotes;
+}
+
+function getFilterNotes(obj) {
+  const notes = obj.props.show === "archive" ? getArchivedNotes() : getActiveNotes();
+    const keyword = obj.props.keyword;
+
+    const filterNotes = notes.map(
+      ({ id, title, body, style, archived, createdAt }) => {
+        if (title.toLowerCase().includes(keyword)) {
+          return {
+            id,
+            title,
+            body,
+            style,
+            archived,
+            createdAt,
+            foundClass: "",
+          };
+        } else {
+          return {
+            id,
+            title,
+            body,
+            style,
+            archived,
+            createdAt,
+            foundClass: "note-item-filter",
+          };
+        }
+      }
+    );
+
+    return { notes: filterNotes };
 }
 
 function addNote(data) {
@@ -165,7 +157,7 @@ export {
   archiveNote,
   unarchiveNote,
   addNote,
-  getData,
+  getFilterNotes,
   stringDateTime,
   note
 };

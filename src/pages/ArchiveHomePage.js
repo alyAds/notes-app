@@ -4,22 +4,17 @@ import ToggleNote from "../components/ToggleNote.js";
 import {
   getArchivedNotes,
   getActiveNotes,
+  getFilterNotes,
   archiveNote,
   unarchiveNote,
   deleteNote,
 } from "../utils/data.js";
 
-const notes = (obj) => {
-    const notes = obj.props.show === "archive" ? getArchivedNotes() : getActiveNotes();
-
-    return { notes };
-}
-
 class ArchiveHomepage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = notes(this);
+    this.state = getFilterNotes(this);
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onArchiveHandler = this.onArchiveHandler.bind(this);
@@ -27,7 +22,7 @@ class ArchiveHomepage extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState === this.state) {
-      this.setState(notes(this));
+      this.setState(getFilterNotes(this));
     }
   }
   
