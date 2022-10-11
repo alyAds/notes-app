@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import NoteList from "../components/NoteList.js";
 import ToggleNote from "../components/ToggleNote.js";
 import { useSearchParams } from "react-router-dom";
@@ -63,6 +64,23 @@ class ArchiveHomepageChild extends React.Component {
       </>
     );
   }
+}
+
+const propType = {
+  show: PropTypes.string.isRequired,
+  keyword: PropTypes.string.isRequired,
+  toggleCaption: PropTypes.string.isRequired,
+  noteClass: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+}
+
+ArchiveHomepage.propType = { ...propType }
+
+ArchiveHomepageChild.propType = {
+  ...propType,
+  title: PropTypes.string.isRequired,
+  keywordChange: PropTypes.func.isRequired,
 }
 
 export default ArchiveHomepage;

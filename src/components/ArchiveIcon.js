@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const path = (object) => {
   const path1 = !object.props.archived
@@ -56,6 +57,12 @@ class ArchiveIcon extends React.Component {
         </a>
       );
   }
+}
+
+ArchiveIcon.propType = {
+  id: PropTypes.string.isRequired,
+  archived: PropTypes.bool.isRequired,
+  onArchiveNote: PropTypes.func.isRequired,
 }
 
 export default ArchiveIcon;

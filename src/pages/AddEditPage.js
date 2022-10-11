@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Overlay from "../components/Overlay.js";
 import { randomClass } from "../utils/random-class.js";
 import {
@@ -22,7 +23,7 @@ function AddEditPageWrapper({ onDelete }) {
 
   return (
     <AddEditPage
-      id={id}
+      id={String(id)}
       onDelete={onDelete}
       overlayClass="overlay overlay-note-edit"
     />
@@ -34,7 +35,7 @@ class AddEditPage extends React.Component {
     super(props);
 
     this.state = {
-      note: this.props.id ? getNote(Number(this.props.id)) : note,
+      note: this.props.id ? getNote(this.props.id) : note,
     };
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -180,6 +181,16 @@ class AddEditPage extends React.Component {
       />
     );
   }
+}
+
+AddEditPageWrapper.propType = {
+  onDelete: PropTypes.func.isRequired
+}
+
+AddEditPage.propType = {
+  id: PropTypes.string,
+  overlayClass: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired
 }
 
 export { AddEditPage, AddEditPageWrapper };

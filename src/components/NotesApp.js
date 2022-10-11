@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, useSearchParams } from "react-router-dom";
+import PropTypes from "prop-types";
 import { AddEditPage, AddEditPageWrapper } from "../pages/AddEditPage.js";
 import SearchBar from "./SearchBar.js";
 import PageNotFound from "../pages/PageNotFound.js";
@@ -54,6 +55,7 @@ class NotesAppChild extends React.Component {
               path="/"
               element={
                 <ArchiveHomePage
+                  show="note"
                   keyword={this.state.keyword}
                   toggleCaption="ARSIP"
                   noteClass="note-item"
@@ -114,6 +116,11 @@ class NotesAppChild extends React.Component {
       </div>
     );
   }
+}
+
+NotesAppChild.propType = {
+  defaultKeyword: PropTypes.string.isRequired,
+  keywordChange: PropTypes.func.isRequired
 }
 
 export default NotesApp;

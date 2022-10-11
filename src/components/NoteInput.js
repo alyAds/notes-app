@@ -1,5 +1,5 @@
-import parser from "html-react-parser";
 import React from "react";
+import PropTypes from "prop-types";
 
 class NoteInput extends React.Component {
   constructor(props) {
@@ -149,6 +149,15 @@ class NoteInput extends React.Component {
       </form>
     );
   }
+}
+
+NoteInput.propType = {
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  onChangeTitle: PropTypes.func.isRequired,
+  onSubmitNote: PropTypes.func.isRequired,
+  onChangeBody: PropTypes.func.isRequired,
 }
 
 export default NoteInput;

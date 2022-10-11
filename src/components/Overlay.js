@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 import NoteInput from "./NoteInput.js";
-import ActionCancel from "./ActionCancel.js";
+import ActionDelete from "./ActionDelete.js";
 import ActionArchive from "./ActionArchive.js";
 import ActionClose from "./ActionClose.js";
 
@@ -9,7 +10,7 @@ function Overlay ({note, overlayClass, onDelete, onArchive, onChangeTitle, onSub
     <div className={overlayClass}>
       <div className="overlay-form">
         <div className="actions">
-          {note.id === '' ? '' : <ActionCancel id={note.id} onDelete={onDelete} />}
+          {note.id === '' ? '' : <ActionDelete id={note.id} onDelete={onDelete} />}
           {note.id === '' ? '' : <ActionArchive id={note.id} archived={note.archived} onArchive={onArchive} />}
           <ActionClose />
         </div>
@@ -17,6 +18,16 @@ function Overlay ({note, overlayClass, onDelete, onArchive, onChangeTitle, onSub
       </div>
     </div>
   );
+}
+
+Overlay.propType = {
+  note: PropTypes.object.isRequired,
+  overlayClass: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onArchive: PropTypes.func.isRequired,
+  onChangeTitle: PropTypes.func.isRequired,
+  onSubmitNote: PropTypes.func.isRequired,
+  onChangeBody: PropTypes.func.isRequired,
 }
 
 export default Overlay;

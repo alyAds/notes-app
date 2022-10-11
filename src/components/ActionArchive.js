@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ArchiveIcon from "./ArchiveIcon";
 
 class ActionArchive extends React.Component {
@@ -48,6 +49,12 @@ class ActionArchive extends React.Component {
       </div>
     );
   }
+}
+
+ActionArchive.propType = {
+  id: PropTypes.string.isRequired,
+  archived: PropTypes.bool.isRequired,
+  onArchive: PropTypes.func.isRequired,
 }
 
 export default ActionArchive;

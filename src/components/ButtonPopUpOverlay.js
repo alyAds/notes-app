@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import addnotesImg from "../assets/addnotes.png";
 
-function ButtonPopUpOverlay({ onToggleOverlay }) {
+function ButtonPopUpOverlay() {
   return (
     <div className="note-add tooltip" data-tooltip="New Note">
-      <Link to="/new" onClick={onToggleOverlay}>
+      <Link to="/new">
         <img src={addnotesImg} alt="add note" />
         <FaPlus size={25}/>
       </Link>

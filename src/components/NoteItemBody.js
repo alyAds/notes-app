@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 function NoteItemBody({id, title, classTag}) {
@@ -10,6 +11,12 @@ function NoteItemBody({id, title, classTag}) {
       <h4 className="note-title">{title}</h4>
     </Link>
   );
+}
+
+NoteItemBody.propType = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  classTag: PropTypes.string.isRequired,
 }
 
 export default NoteItemBody;

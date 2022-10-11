@@ -1,6 +1,6 @@
 let notes = [
   {
-    id: 1,
+    id: "note-1",
     title: "Biaya Hidup",
     body: "Lorem ipsum <b>dolor</b>, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum.",
     archived: false,
@@ -9,7 +9,7 @@ let notes = [
     createdAt: '2022-04-14 04:27:34',
   },
   {
-    id: 2,
+    id: "note-2",
     title: "Renungan hati",
     body: "Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum. Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
     archived: true,
@@ -18,7 +18,7 @@ let notes = [
     createdAt: '2022-04-14 04:27:34',
   },
   {
-    id: 3,
+    id: "note-3",
     title: "Wajib lakukan hal ini diumur 20-an",
     body: "Vel, porro illum. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum?",
     archived: true,
@@ -27,7 +27,7 @@ let notes = [
     createdAt: '2022-04-14 04:27:34',
   },
   {
-    id: 4,
+    id: "note-4",
     title: "Makan ini bermanfaat",
     body: "Vel, porro illum. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
     archived: false,

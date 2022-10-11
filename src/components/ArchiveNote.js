@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ArchiveIcon from "./ArchiveIcon";
 
 class ArchiveNote extends React.Component {
@@ -44,6 +45,13 @@ class ArchiveNote extends React.Component {
       </div>
     );
   }
+}
+
+ArchiveNote.propType = {
+  id: PropTypes.string.isRequired,
+  archived: PropTypes.bool.isRequired,
+  noteElemRef: PropTypes.element.isRequired,
+  onArchive: PropTypes.func.isRequired,
 }
 
 export default ArchiveNote;

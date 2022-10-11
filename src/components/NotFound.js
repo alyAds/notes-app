@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ToggleNote from "./ToggleNote";
 import { randomClass } from "../utils/random-class.js";
 
@@ -26,6 +27,12 @@ function NoteRipped() {
       </svg>
     </div>
   );
+}
+
+NotFound.propType = {
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  caption: PropTypes.string.isRequired,
 }
 
 export default NotFound;

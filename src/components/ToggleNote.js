@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import pileofnotesImg from "../assets/pileofnotes.png";
 
@@ -11,6 +12,11 @@ function ToggleNote({ toggleCaption, link }) {
       </Link>
     </div>
   );
+}
+
+ToggleNote.propType = {
+  toggleCaption: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
 }
 
 export default ToggleNote;

@@ -1,7 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
-function ActionCancel ({id, onDelete}) {
+function ActionDelete ({id, onDelete}) {
   const navigate = useNavigate();
 
   return (
@@ -20,4 +21,9 @@ function ActionCancel ({id, onDelete}) {
   );
 }
 
-export default ActionCancel;
+ActionDelete.propType = {
+  id: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+}
+
+export default ActionDelete;
