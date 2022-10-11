@@ -2,7 +2,7 @@ let notes = [
   {
     id: 1,
     title: "Biaya Hidup",
-    body: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum.",
+    body: "Lorem ipsum <b>dolor</b>, sit amet consectetur adipisicing elit. Assumenda tempora sequi labore mollitia repellendus corporis aspernatur blanditiis earum voluptatum, consectetur veniam maiores saepe quidem consequuntur, deserunt amet nostrum excepturi voluptate enim repudiandae fugit quisquam sit! Non fuga quibusdam inventore architecto est saepe ducimus mollitia veritatis provident rerum? Vel, porro illum.",
     archived: false,
     style: "note-1",
     foundClass: '',
@@ -123,10 +123,11 @@ function unarchiveNote(id) {
   });
 }
 
-function editNote({ id, title, body }) {
+function editNote({ id, title, body, createdAt }) {
   const noteToEdit = notes.find((note) => note.id === id);
   noteToEdit.title = title;
   noteToEdit.body = body;
+  noteToEdit.createdAt = createdAt;
 
   notes = notes.map((note) => {
     if (note.id === id) {

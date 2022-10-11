@@ -19,7 +19,7 @@ class ArchiveNote extends React.Component {
   }
 
   onArchiveNoteHandler(e, id, archived) {
-    this.props.onArchive(e, id);
+    this.props.onArchive(e, id, this.props.noteElemRef);
 
     if (archived) {
       this.setState({

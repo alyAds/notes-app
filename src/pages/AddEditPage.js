@@ -15,10 +15,18 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
+import NotFound from "../components/NotFound.js";
 
-function AddEditPageWrapper({onDelete}) {
+function AddEditPageWrapper({ onDelete }) {
   const { id } = useParams();
-  return <AddEditPage id={id} onDelete={onDelete} overlayClass="overlay overlay-note-edit" />
+
+  return (
+    <AddEditPage
+      id={id}
+      onDelete={onDelete}
+      overlayClass="overlay overlay-note-edit"
+    />
+  );
 }
 
 class AddEditPage extends React.Component {
@@ -103,7 +111,11 @@ class AddEditPage extends React.Component {
   onArchiveHandler(e, id) {
     const notes = getAllNotes();
     const index = notes.findIndex((data) => data.id === id);
-    const archive = e.currentTarget.parentNode.classList.contains("note-archive__archive") ? false : true;
+    const archive = e.currentTarget.parentNode.classList.contains(
+      "note-archive__archive"
+    )
+      ? false
+      : true;
 
     if (index !== -1) {
       if (archive) {
@@ -125,7 +137,7 @@ class AddEditPage extends React.Component {
   onChangeTitleHandler(e) {
     const newTitle = e.target.value;
 
-    if (newTitle.length >= 1 && newTitle.length <= 50) {
+    if (newTitle.length <= 50) {
       const note = {
         ...this.state.note,
         title: newTitle,
@@ -133,15 +145,15 @@ class AddEditPage extends React.Component {
 
       this.setState({ note });
     } else {
-      // notify("warn", "Judul Catatan tidak lebih dari 50 karakter!")
       toast.warn("Judul Catatan tidak lebih dari 50 karakter!");
     }
   }
 
   onChangeBodyHandler(e) {
-    const newBody = e.target.value;
+    const bodyLength = e.target.textContent.length;
+    const newBody = e.target.innerHTML;
 
-    if (newBody.length <= 1000) {
+    if (bodyLength <= 1000) {
       const note = {
         ...this.state.note,
         body: newBody,
@@ -149,26 +161,25 @@ class AddEditPage extends React.Component {
 
       this.setState({ note });
     } else {
-      // notify("Isi Catatan lebih dari 1000 karakter!")
       toast.warn("Isi Catatan lebih dari 1000 karakter!");
     }
   }
 
   render() {
-    return (
-      <>
-        <Overlay
-          note={this.state.note}
-          overlayClass={this.props.overlayClass}
-          onDelete={this.onDeleteHandler}
-          onArchive={this.onArchiveHandler}
-          onSubmitNote={this.onSubmitNoteHandler}
-          onChangeTitle={this.onChangeTitleHandler}
-          onChangeBody={this.onChangeBodyHandler}
-        />
-      </>
+    return this.state.note === undefined ? (
+      <NotFound caption={"The note you are looking for may be ripped!"} />
+    ) : (
+      <Overlay
+        note={this.state.note}
+        overlayClass={this.props.overlayClass}
+        onDelete={this.onDeleteHandler}
+        onArchive={this.onArchiveHandler}
+        onSubmitNote={this.onSubmitNoteHandler}
+        onChangeTitle={this.onChangeTitleHandler}
+        onChangeBody={this.onChangeBodyHandler}
+      />
     );
   }
 }
 
-export {AddEditPage, AddEditPageWrapper};
+export { AddEditPage, AddEditPageWrapper };

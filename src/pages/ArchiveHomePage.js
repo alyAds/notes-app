@@ -38,10 +38,14 @@ class ArchiveHomepageChild extends React.Component {
     this.setState(getFilterNotes(this));
   }
 
-  onArchiveHandler(e, id) {
+  onArchiveHandler(e, id, noteElemRef) {
+    noteElemRef.current.classList.add("hide-note");
     this.props.show === "archive" ? unarchiveNote(id) : archiveNote(id);
 
-    this.setState(getFilterNotes(this));
+    setTimeout(() => {
+      this.setState(getFilterNotes(this));
+    }, 400);
+    
     e.preventDefault();
   }
 

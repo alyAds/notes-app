@@ -150,6 +150,13 @@ header svg {
   animation: hidenote .4s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+.body .note-item.hide-note {
+  position: absolute;
+  left: 83%;
+  transform: scale(.1) translateY(-50%);
+  transition: all .4s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 @keyframes hidenote {
   from {
     position: absolute;
@@ -206,7 +213,7 @@ header svg {
   color: #100F0F;
 }
 
-.body .note svg {
+.body .note svg, .not-found svg {
   filter: drop-shadow(7px 11px 14px rgba(0, 0, 0, 0.25));
 }
 
@@ -473,6 +480,7 @@ footer .note-add svg {
 .form-input-body {
   padding: 0;
   font-size: 14px;
+  width: 733px;
   height: 60vh;
   max-height: 550px;
   line-height: 1.91;
@@ -481,8 +489,14 @@ footer .note-add svg {
   background-repeat: repeat;
   background-size: 100% auto;
   background-attachment:local;
-  border: none;
-  resize: none;
+  overflow: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+
+.form-input-body::after {
+  content: attr(data-placeholder);
+  color: #706f6f;
 }
 
 .form-footer {
@@ -507,4 +521,21 @@ footer .note-add svg {
   color: #fff;
   display: flex;
   align-items: center;
+}
+
+.not-found {
+  width: 733px;
+  margin: 0px auto;
+  text-align: center;
+}
+
+.not-found h1 {
+  margin: 7% 0;
+  font-size: 32px;
+  color: #b9a999;
+}
+
+.not-found svg {
+  fill: #0F3D3E;
+  width: 250px;
 }

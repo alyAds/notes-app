@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import pileofnotesImg from "../assets/pileofnotes.png";
 
 function ToggleNote({ toggleCaption, link }) {
   return (
     <div className="note-toggle">
       <Link to={link}>
         <span>{toggleCaption}</span>
-        <img src="./images/pileofnotes.png" alt="pile of notes" />
+        <img src={pileofnotesImg} alt="pile of notes" />
       </Link>
     </div>
   );

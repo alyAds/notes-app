@@ -1,14 +1,15 @@
 import React from "react";
 import { Routes, Route, useSearchParams } from "react-router-dom";
-import SearchBar from "./SearchBar.js";
 import { AddEditPage, AddEditPageWrapper } from "../pages/AddEditPage.js";
+import SearchBar from "./SearchBar.js";
+import PageNotFound from "../pages/PageNotFound.js";
 import ArchiveHomePage from "../pages/ArchiveHomePage.js";
 import ButtonPopUpOverlay from "./ButtonPopUpOverlay.js";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { controlSearchParams } from "../utils/data.js";
+import "react-toastify/dist/ReactToastify.css";
 
-function NotesApp({ filterNotes }) {
+function NotesApp() {
   const {title, changeSearchParams} = controlSearchParams(useSearchParams());
 
   return (
@@ -84,8 +85,12 @@ class NotesAppChild extends React.Component {
               }
             />
             <Route
-              path="/:id"
+              path="/note/:id"
               element={<AddEditPageWrapper onDelete={this.onDeleteHandler} />}
+            />
+            <Route
+              path="/*"
+              element={<PageNotFound />}
             />
           </Routes>
         </div>

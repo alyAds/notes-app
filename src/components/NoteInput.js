@@ -1,3 +1,4 @@
+import parser from "html-react-parser";
 import React from "react";
 
 class NoteInput extends React.Component {
@@ -5,15 +6,16 @@ class NoteInput extends React.Component {
     super(props);
 
     this.state = {
-      lastSaved: '',
+      lastSaved: (this.props.createdAt) ? "Last saved at " + this.props.createdAt : "",
       formGroupClassTitle: "form-group tooltip",
       formGroupClassBody: "form-group tooltip",
       titleTooltipRemainder: `Judul Catatan tersisa 50 karakter`,
       bodyTooltipRemainder: `Isi Catatan tersisa 1000 karakter`,
+      placeholder: 'Isi catatan...'
     }
 
     this.onChangeTitleHandler = this.onChangeTitleHandler.bind(this);
-    this.onChangeBodyHandler = this.onChangeBodyHandler.bind(this);
+    this.onInputBodyHandler = this.onInputBodyHandler.bind(this);
     this.onFocusTitleHandler = this.onFocusTitleHandler.bind(this);
     this.onBlurTitleHandler = this.onBlurTitleHandler.bind(this);
     this.onFocusBodyHandler = this.onFocusBodyHandler.bind(this);
@@ -22,13 +24,16 @@ class NoteInput extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.createdAt !== this.props.createdAt) {
-      const lastSaved = (this.props.createdAt) ? "Last saved at " + this.props.createdAt : "";
-      this.setState({
-        lastSaved,
-        titleTooltipRemainder: `Judul Catatan tersisa ${50 - this.props.title.length} karakter`,
-        bodyTooltipRemainder: `Isi Catatan tersisa ${1000 - this.props.body.length} karakter`,
-      });
+      const autoSaveSpan = document.querySelector('.form-auto-save');
+  
+      autoSaveSpan.innerHTML = "Last saved at " + this.props.createdAt;
     }
+  }
+
+  componentDidMount() {
+    const inputBody = document.getElementById('form-note-body');
+
+    inputBody.innerHTML = this.props.body;
   }
 
   onChangeTitleHandler(e) {
@@ -47,14 +52,17 @@ class NoteInput extends React.Component {
     this.props.onChangeTitle(e);
   }
 
-  onChangeBodyHandler(e) {
-    const bodyLength = e.target.value.length;
+  onInputBodyHandler(e) {
+    const bodyLength = e.target.textContent.length;
     let formGroupClassBody = this.state.formGroupClassBody.includes("form-group-keyup") ? this.state.formGroupClassBody : "form-group tooltip form-group-keyup"
     let remainder = 1000 - bodyLength;
-    remainder = (remainder < 1) ? "Maksimal 1000 karakter!" : `Isi Catatan tersisa ${remainder} karakter`
+    const placeholder = (bodyLength > 0) ? "" : "Isi catatan...";
+
+    remainder = (remainder < 1) ? "Maksimal 1000 karakter!" : `Isi Catatan tersisa ${remainder} karakter`;
 
     this.setState((prevState) => {
       return {
+        placeholder,
         formGroupClassBody,
         bodyTooltipRemainder: remainder
       }
@@ -85,7 +93,7 @@ class NoteInput extends React.Component {
     
     this.setState({
       formGroupClassBody,
-      bodyTooltipRemainder: `Judul Catatan tersisa ${1000 - e.target.value.length} karakter`,
+      bodyTooltipRemainder: `Isi Catatan tersisa ${1000 - e.target.textContent.length} karakter`,
     });
   }
 
@@ -112,17 +120,15 @@ class NoteInput extends React.Component {
           />
         </div>
         <div className={this.state.formGroupClassBody} data-tooltip={this.state.bodyTooltipRemainder}>
-          <textarea
+          <div
+            contentEditable
             id="form-note-body"
-            value={this.props.body}
-            onChange={this.onChangeBodyHandler}
+            onInput={this.onInputBodyHandler}
             onFocus={this.onFocusBodyHandler}
             onBlur={this.onBlurBodyHandler}
-            maxLength="1000"
             className="form-input form-input-body"
-            cols="100"
-            rows="9"
-            placeholder="Isi catatan..."
+            data-placeholder={this.props.body ? "" : this.state.placeholder }
+            suppressContentEditableWarning={true}
           />
         </div>
         <div className="form-footer">
