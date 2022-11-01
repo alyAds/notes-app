@@ -152,11 +152,11 @@ function stringDateTime(datetime) {
 
 function controlSearchParams(useSearchParams) {
   const [searchParams, setSearchParams] = useSearchParams;
-  const title = searchParams.get("title");
+  const title = searchParams.get("title") || "";
 
   function changeSearchParams(title) {
     if (title) {
-      setSearchParams({ title })
+      setSearchParams({ title });
     } else {
       searchParams.delete("title");
       setSearchParams(searchParams);

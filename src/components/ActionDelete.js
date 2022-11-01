@@ -5,9 +5,14 @@ import { useNavigate } from "react-router-dom";
 function ActionDelete ({id, onDelete}) {
   const navigate = useNavigate();
 
+  function deleteNote(event, id) {
+    navigate(-1);
+    onDelete(event, id);
+  }
+
   return (
     <div className="action action-cancel tooltip" data-tooltip="Delete">
-      <button onClick={(event) => {onDelete(event, id); navigate(-1)}}>
+      <button onClick={(event) => {deleteNote(event, id)}}>
         <svg viewBox="0 0 32 32" fill="none">
           <path
             fillRule="evenodd"
@@ -21,7 +26,7 @@ function ActionDelete ({id, onDelete}) {
   );
 }
 
-ActionDelete.propType = {
+ActionDelete.propTypes = {
   id: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
 }

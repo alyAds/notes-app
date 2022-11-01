@@ -4,9 +4,13 @@ import { useNavigate } from "react-router-dom";
 function ActionClose() {
   const navigate = useNavigate();
 
+  function redirecTo(path) {
+    navigate(path);
+  }
+
   return (
     <div className="action action-pin tooltip" data-tooltip="Close">
-      <button onClick={() => navigate(-1)}>
+      <button onClick={() => redirecTo(-1)}>
         <svg viewBox="0 0 38 38" fill="none">
           <path
             d="M0.5 34.4019V6.5H32.5V35.7312C30.3576 37.3017 24.3249 38.8712 16.4999 32.0494C15.4699 31.1515 14.0047 30.6917 12.4152 30.5437C10.8176 30.3949 9.04177 30.5556 7.33253 30.9492C5.623 31.3428 3.959 31.9743 2.58716 32.783C1.78627 33.2551 1.06828 33.7976 0.5 34.4019Z"

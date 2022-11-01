@@ -4,83 +4,111 @@ import NoteList from "../components/NoteList.js";
 import ToggleNote from "../components/ToggleNote.js";
 import { useSearchParams } from "react-router-dom";
 import {
-  getFilterNotes,
+  deleteNote,
   archiveNote,
   unarchiveNote,
-  deleteNote,
+  getFilterNotes2,
+  newNotes,
+  filterNotesSearch,
   controlSearchParams,
-} from "../utils/data.js";
+} from "../utils/network-data.js";
+import { toast } from "react-toastify";
+import SettingContext from "../contexts/SettingContext.js";
 
 function ArchiveHomepage(props) {
-  const {title, changeSearchParams} = controlSearchParams(useSearchParams());
+  const { exceptId, setExceptId } = React.useContext(SettingContext);
+  const { title, changeSearchParams } = controlSearchParams(useSearchParams());
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [allNotes, setAllNotes] = React.useState(null);
 
-  return <ArchiveHomepageChild {...props} title={title} keywordChange={changeSearchParams} />
-}
+  async function onDeleteHandler(event, id) {
+    const { error, data } = await deleteNote(event, id);
+    !error && toast.warn(`Catatan ${data} berhasil dihapus!`);
+    const { notes } = await getFilterNotes2(props, title, changeSearchParams);
 
-class ArchiveHomepageChild extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = getFilterNotes(this);
-
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    this.onArchiveHandler = this.onArchiveHandler.bind(this);
+    setAllNotes(newNotes(id, allNotes, notes));
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState === this.state) {
-      this.setState(getFilterNotes(this));
-    }
-  }
-  
-  onDeleteHandler(event, id) {
-    deleteNote(this, event, id);
-
-    this.setState(getFilterNotes(this));
-  }
-
-  onArchiveHandler(e, id, noteElemRef) {
+  async function onArchiveHandler(e, id, noteElemRef) {
+    e.preventDefault();
     noteElemRef.current.classList.add("hide-note");
-    this.props.show === "archive" ? unarchiveNote(id) : archiveNote(id);
+
+    props.show === "archive" ? await unarchiveNote(id) : await archiveNote(id);
 
     setTimeout(() => {
-      this.setState(getFilterNotes(this));
+      getFilterNotes2(props, title, changeSearchParams).then(({ notes }) => {
+        setAllNotes(newNotes(id, allNotes, notes));
+      });
     }, 400);
-    
-    e.preventDefault();
   }
 
-  render() {
-    return (
-      <>
-        <NoteList
-          notes={this.state.notes}
-          toggleCaption={this.props.toggleCaption}
-          noteClass={this.props.noteClass}
-          onDelete={this.onDeleteHandler}
-          onArchive={this.onArchiveHandler}
-        />
-        <ToggleNote toggleCaption={this.props.toggleCaption} link={this.props.link} />
-      </>
+  React.useEffect(() => {
+    async function fetchNotes() {
+      const { notes } = await getFilterNotes2(props, title, changeSearchParams);
+      setIsLoading(false);
+      setAllNotes(notes);
+    }
+
+    if (title !== "" && allNotes !== null) {
+      setIsLoading(false);
+      setAllNotes(filterNotesSearch(allNotes, title));
+    } else {
+      fetchNotes();
+
+      return () => {
+        setIsLoading(true);
+        setAllNotes(null);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.show, title]);
+
+  React.useEffect(() => {
+    if (exceptId !== "") {
+      getFilterNotes2(props, title, changeSearchParams).then(({ notes }) => {
+        setAllNotes(newNotes(exceptId, allNotes, notes));
+        setExceptId("");
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exceptId]);
+
+  let skeletonLoading = "";
+
+  if (isLoading) {
+    skeletonLoading = (
+      <div className="notes">
+        {Array(3)
+          .fill(null)
+          .map((val, i) => (
+            <div key={i} className="note-item note-item-skeleton"></div>
+          ))}
+      </div>
     );
   }
+
+  return (
+    <>
+      {skeletonLoading || (
+        <NoteList
+          notes={allNotes}
+          toggleCaption={props.toggleCaption}
+          noteClass={props.noteClass}
+          onDelete={onDeleteHandler}
+          onArchive={onArchiveHandler}
+        />
+      )}
+      <ToggleNote toggleCaption={props.toggleCaption} link={props.link} />
+    </>
+  );
 }
 
-const propType = {
+ArchiveHomepage.propTypes = {
   show: PropTypes.string.isRequired,
   keyword: PropTypes.string.isRequired,
   toggleCaption: PropTypes.string.isRequired,
   noteClass: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired,
-}
-
-ArchiveHomepage.propType = { ...propType }
-
-ArchiveHomepageChild.propType = {
-  ...propType,
-  title: PropTypes.string.isRequired,
-  keywordChange: PropTypes.func.isRequired,
-}
+};
 
 export default ArchiveHomepage;

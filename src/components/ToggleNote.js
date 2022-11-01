@@ -14,7 +14,7 @@ function ToggleNote({ toggleCaption, link }) {
   );
 }
 
-ToggleNote.propType = {
+ToggleNote.propTypes = {
   toggleCaption: PropTypes.string.isRequired,
   link: PropTypes.string.isRequired,
 }

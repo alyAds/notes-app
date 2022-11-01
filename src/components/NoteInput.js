@@ -1,12 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { stringDateTime } from "../utils/network-data.js";
 
 class NoteInput extends React.Component {
   constructor(props) {
     super(props);
 
+    const datetime = (this.props.createdAt) ? stringDateTime(new Date(this.props.createdAt)) : "";
+
     this.state = {
-      lastSaved: (this.props.createdAt) ? "Last saved at " + this.props.createdAt : "",
+      lastSaved: (datetime) ? "Last saved at " + datetime : "",
       formGroupClassTitle: "form-group tooltip",
       formGroupClassBody: "form-group tooltip",
       titleTooltipRemainder: `Judul Catatan tersisa 50 karakter`,
@@ -25,8 +28,11 @@ class NoteInput extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.createdAt !== this.props.createdAt) {
       const autoSaveSpan = document.querySelector('.form-auto-save');
+      const inputBody = document.getElementById('form-note-body');
+      const datetime = (this.props.createdAt) ? stringDateTime(new Date(this.props.createdAt)) : "";
   
-      autoSaveSpan.innerHTML = "Last saved at " + this.props.createdAt;
+      autoSaveSpan.innerHTML = "Last saved at " + datetime;
+      inputBody.innerHTML = this.props.body;
     }
   }
 
@@ -151,7 +157,7 @@ class NoteInput extends React.Component {
   }
 }
 
-NoteInput.propType = {
+NoteInput.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,

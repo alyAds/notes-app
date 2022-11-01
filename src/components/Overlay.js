@@ -20,7 +20,7 @@ function Overlay ({note, overlayClass, onDelete, onArchive, onChangeTitle, onSub
   );
 }
 
-Overlay.propType = {
+Overlay.propTypes = {
   note: PropTypes.object.isRequired,
   overlayClass: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,

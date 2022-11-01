@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ToggleNote from "./ToggleNote";
-import { randomClass } from "../utils/random-class.js";
+import { randomClass } from "../utils/network-data";
 
 function NotFound({ src, alt, caption }) {
   const elemFig = src ? <img src={src} alt={alt} /> : <NoteRipped />;
@@ -29,7 +29,7 @@ function NoteRipped() {
   );
 }
 
-NotFound.propType = {
+NotFound.propTypes = {
   src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
   caption: PropTypes.string.isRequired,

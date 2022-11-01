@@ -1,105 +1,143 @@
 import React from "react";
-import { Routes, Route, useSearchParams } from "react-router-dom";
-import PropTypes from "prop-types";
-import { AddEditPage, AddEditPageWrapper } from "../pages/AddEditPage.js";
+import { useSearchParams } from "react-router-dom";
 import SearchBar from "./SearchBar.js";
-import PageNotFound from "../pages/PageNotFound.js";
-import ArchiveHomePage from "../pages/ArchiveHomePage.js";
 import ButtonPopUpOverlay from "./ButtonPopUpOverlay.js";
-import { ToastContainer, toast } from "react-toastify";
-import { controlSearchParams } from "../utils/data.js";
+import Menu from "./Menu.js";
+import RoutesAuthedNull from "./RoutesAuthedNull.js";
+import RoutesAuthed from "./RoutesAuthed.js";
+import LoadingPage from "./LoadingPage.js";
+import { SettingProvider } from "../contexts/SettingContext.js";
+import { ToastContainer } from "react-toastify";
+import {
+  getUserLogged,
+  putAccessToken,
+  controlSearchParams,
+} from "../utils/network-data.js";
 import "react-toastify/dist/ReactToastify.css";
 
 function NotesApp() {
-  const {title, changeSearchParams} = controlSearchParams(useSearchParams());
+  let footerContainerClass = "";
+  let routesAuthedNull = "";
+  let headerClass = "";
+  let footerClass = "";
+  let bodyClass = "";
+  const { title, changeSearchParams } = controlSearchParams(useSearchParams());
+  const [initializing, setInitializing] = React.useState(true);
+  const [authedUser, setAuthedUser] = React.useState(null);
+  const [exceptId, setExceptId] = React.useState("");
 
-  return (
-    <NotesAppChild defaultKeyword={title} keywordChange={changeSearchParams} />
-  );
-}
+  const [locale, setLocale] = React.useState(() => {
+    return localStorage.getItem("locale") || "en";
+  });
+  const [theme, setTheme] = React.useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
 
-class NotesAppChild extends React.Component {
-  constructor(props) {
-    super(props);
+  const toggleLocale = () => {
+    setLocale((prevLocale) => {
+      const newLocale = prevLocale === "en" ? "id" : "en";
+      localStorage.setItem("locale", newLocale);
 
-    this.state = {
-      keyword: props.defaultKeyword || "",
+      return newLocale;
+    });
+  };
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      let newTheme = prevTheme === "light" ? "dark" : "light";
+      localStorage.setItem("theme", newTheme);
+
+      return newTheme;
+    });
+  };
+
+  const onLoginSuccess = async ({ accessToken }) => {
+    putAccessToken(accessToken);
+    const { error, data } = await getUserLogged();
+
+    !error && setAuthedUser(data);
+  };
+
+  const onLogout = async () => {
+    setTheme("dark");
+    toggleTheme();
+    setAuthedUser(null);
+
+    putAccessToken("");
+  };
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      const { error, data } = await getUserLogged();
+
+      !error && setAuthedUser(data);
+      setInitializing(false);
     };
 
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    this.onFilterNotesHandler = this.onFilterNotesHandler.bind(this);
+    loadUser();
+
+    return () => {
+      setInitializing(true);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    let unsubscribe = false;
+
+    if (!unsubscribe) {
+      document.body.setAttribute("data-theme", theme);
+    }
+
+    return () => {
+      unsubscribe = true;
+    };
+  }, [theme]);
+
+  const settingContextValue = React.useMemo(() => {
+    return {
+      locale,
+      toggleLocale,
+      theme,
+      toggleTheme,
+      authedUser,
+      setAuthedUser,
+      exceptId,
+      setExceptId,
+    };
+  }, [theme, locale, authedUser, exceptId]);
+
+  if (authedUser === null) {
+    headerClass = "justify-center header-login";
+    bodyClass = "body body-login";
+    footerClass = "footer-login";
+    footerContainerClass = "footer-container justify-center footer-login";
+    routesAuthedNull = <RoutesAuthedNull loginSuccess={onLoginSuccess} />;
   }
 
-  onDeleteHandler(status, message) {
-    return status === "warn" ? toast.warn(message) : toast(message);
-  }
-
-  onFilterNotesHandler(keyword) {
-    this.setState({ keyword });
-    this.props.keywordChange(keyword);
-  }
-
-  render() {
-    return (
+  return initializing ? (
+    <LoadingPage />
+  ) : (
+    <SettingProvider value={settingContextValue}>
       <div className="notes-app">
-        <header>
+        <header className={headerClass || ""}>
           <h1>Note</h1>
-          <SearchBar
-            defaultKeyword={this.state.keyword}
-            filterNotes={this.onFilterNotesHandler}
-          />
+          {headerClass ? (
+            ""
+          ) : (
+            <SearchBar
+              defaultKeyword={title}
+              filterNotes={changeSearchParams}
+            />
+          )}
+          {headerClass ? "" : <Menu logout={onLogout} />}
         </header>
-        <div className="body">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ArchiveHomePage
-                  show="note"
-                  keyword={this.state.keyword}
-                  toggleCaption="ARSIP"
-                  noteClass="note-item"
-                  link="/archive"
-                  onDelete={this.onDeleteHandler}
-                />
-              }
-            />
-            <Route
-              path="/archive"
-              element={
-                <ArchiveHomePage
-                  show="archive"
-                  keyword={this.state.keyword}
-                  toggleCaption="NOTEs"
-                  noteClass="note-item note-item-archive"
-                  link="/"
-                  onDelete={this.onDeleteHandler}
-                />
-              }
-            />
-            <Route
-              path="/new"
-              element={
-                <AddEditPage
-                  overlayClass="overlay overlay-note-add"
-                  onDelete={this.onDeleteHandler}
-                />
-              }
-            />
-            <Route
-              path="/note/:id"
-              element={<AddEditPageWrapper onDelete={this.onDeleteHandler} />}
-            />
-            <Route
-              path="/*"
-              element={<PageNotFound />}
-            />
-          </Routes>
+        <div className={bodyClass || "body"}>
+          {routesAuthedNull || <RoutesAuthed keyword={title} />}
         </div>
-        <footer>
-          <div className="footer-container">
+        <footer className={footerClass || ""}>
+          <div className={footerContainerClass || "footer-container"}>
             <div className="copyright">AlyAds &#169; 2022</div>
-            <ButtonPopUpOverlay />
+            {footerContainerClass === "" ? <ButtonPopUpOverlay /> : ""}
           </div>
         </footer>
         <ToastContainer
@@ -114,13 +152,8 @@ class NotesAppChild extends React.Component {
           pauseOnHover
         />
       </div>
-    );
-  }
-}
-
-NotesAppChild.propType = {
-  defaultKeyword: PropTypes.string.isRequired,
-  keywordChange: PropTypes.func.isRequired
+    </SettingProvider>
+  );
 }
 
 export default NotesApp;

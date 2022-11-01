@@ -47,10 +47,10 @@ class ArchiveNote extends React.Component {
   }
 }
 
-ArchiveNote.propType = {
+ArchiveNote.propTypes = {
   id: PropTypes.string.isRequired,
   archived: PropTypes.bool.isRequired,
-  noteElemRef: PropTypes.element.isRequired,
+  noteElemRef: PropTypes.object.isRequired,
   onArchive: PropTypes.func.isRequired,
 }
 

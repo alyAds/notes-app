@@ -51,7 +51,7 @@ class ActionArchive extends React.Component {
   }
 }
 
-ActionArchive.propType = {
+ActionArchive.propTypes = {
   id: PropTypes.string.isRequired,
   archived: PropTypes.bool.isRequired,
   onArchive: PropTypes.func.isRequired,

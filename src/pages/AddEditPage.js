@@ -1,30 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useParams } from "react-router-dom";
 import Overlay from "../components/Overlay.js";
-import { randomClass } from "../utils/random-class.js";
+import NotFound from "../components/NotFound.js";
 import {
-  getAllNotes,
-  stringDateTime,
-  addNote,
-  editNote,
   deleteNote,
   archiveNote,
   unarchiveNote,
+  addNote,
   getNote,
   note,
-} from "../utils/data.js";
+  setStateNote,
+} from "../utils/network-data.js";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useParams } from "react-router-dom";
-import NotFound from "../components/NotFound.js";
+import SettingContext from "../contexts/SettingContext.js";
 
-function AddEditPageWrapper({ onDelete }) {
+function AddEditPageWrapper() {
   const { id } = useParams();
 
   return (
     <AddEditPage
       id={String(id)}
-      onDelete={onDelete}
       overlayClass="overlay overlay-note-edit"
     />
   );
@@ -35,7 +31,7 @@ class AddEditPage extends React.Component {
     super(props);
 
     this.state = {
-      note: this.props.id ? getNote(this.props.id) : note,
+      note: note,
     };
 
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -45,7 +41,18 @@ class AddEditPage extends React.Component {
     this.onChangeBodyHandler = this.onChangeBodyHandler.bind(this);
   }
 
-  onSubmitNoteHandler(e) {
+  async componentDidMount() {
+    const id = this.props.id;
+    if (id !== undefined) {
+      const { error, data } = await getNote(this.props.id);
+
+      setStateNote(this, error, data);
+    }
+  }
+
+  async onSubmitNoteHandler(e) {
+    e.preventDefault();
+
     let note = this.state.note;
     const id = note.id;
     let error = false;
@@ -65,74 +72,52 @@ class AddEditPage extends React.Component {
       return false;
     }
 
-    const datetime = new Date();
-    const style = randomClass[Math.floor(Math.random() * randomClass.length)];
-
-    note = {
-      ...this.state.note,
-      title: note.title,
-      body: note.body,
-      createdAt: stringDateTime(datetime),
-    };
-
     if (id !== "") {
-      this.setState({ note });
-      editNote(note);
+      toast("Maaf, saat ini menu edit belum tersedia di API Dicoding");
+      return false;
     } else {
       note = {
-        id: `notes-${+new Date()}`,
         title: note.title,
         body: note.body,
-        style,
-        archived: false,
-        foundClass: "",
-        createdAt: stringDateTime(datetime),
       };
 
-      this.setState((prevState) => {
+      this.setState(() => {
         return {
           toolTipAction: "Delete",
-          note,
         };
       });
 
-      addNote(note);
+      const { error, data } = await addNote(note);
+
+      setStateNote(this, error, data);
     }
 
     toast(`${note.title} saved`);
+  }
+
+  async onDeleteHandler(e, id) {
+    const {error, data} = await deleteNote(e, id);
+    this.context.setExceptId(id);
+    !error && toast.warn(`Catatan ${data} berhasil dihapus!`);
+  }
+
+  async onArchiveHandler(e, id) {
     e.preventDefault();
-  }
+    const { error, data } = await getNote(id);
 
-  onDeleteHandler(e, id) {
-    deleteNote(this, e, id);
-
-    this.setState({ note });
-  }
-
-  onArchiveHandler(e, id) {
-    const notes = getAllNotes();
-    const index = notes.findIndex((data) => data.id === id);
-    const archive = e.currentTarget.parentNode.classList.contains(
-      "note-archive__archive"
-    )
-      ? false
-      : true;
-
-    if (index !== -1) {
-      if (archive) {
-        archiveNote(id);
+    if (error === false) {
+      if (!data.archived) {
+        await archiveNote(id);
       } else {
-        unarchiveNote(id);
+        await unarchiveNote(id);
       }
 
       this.setState((prevState) => {
         return {
-          note: { ...prevState.note, archived: archive },
+          note: { ...prevState.note, archived: !data.archived },
         };
       });
     }
-
-    e.preventDefault();
   }
 
   onChangeTitleHandler(e) {
@@ -168,7 +153,7 @@ class AddEditPage extends React.Component {
 
   render() {
     return this.state.note === undefined ? (
-      <NotFound caption={"The note you are looking for may be ripped!"} />
+      <NotFound src="" alt="" caption={"The note you are looking for may be ripped!"} />
     ) : (
       <Overlay
         note={this.state.note}
@@ -183,14 +168,11 @@ class AddEditPage extends React.Component {
   }
 }
 
-AddEditPageWrapper.propType = {
-  onDelete: PropTypes.func.isRequired
-}
-
-AddEditPage.propType = {
+AddEditPage.propTypes = {
   id: PropTypes.string,
   overlayClass: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired
-}
+};
+
+AddEditPage.contextType = SettingContext;
 
 export { AddEditPage, AddEditPageWrapper };

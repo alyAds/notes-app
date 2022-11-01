@@ -16,7 +16,7 @@ function DeleteNote({ id, onDelete }) {
   );
 }
 
-DeleteNote.propType = {
+DeleteNote.propTypes = {
   id: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
 }

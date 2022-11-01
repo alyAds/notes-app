@@ -13,7 +13,7 @@ function NoteItemBody({id, title, classTag}) {
   );
 }
 
-NoteItemBody.propType = {
+NoteItemBody.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   classTag: PropTypes.string.isRequired,

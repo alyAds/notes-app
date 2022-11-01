@@ -37,7 +37,7 @@ function NoteItem({
   );
 }
 
-NoteItem.propType = {
+NoteItem.propTypes = {
   id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   archived: PropTypes.bool.isRequired,

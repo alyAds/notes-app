@@ -59,7 +59,7 @@ class ArchiveIcon extends React.Component {
   }
 }
 
-ArchiveIcon.propType = {
+ArchiveIcon.propTypes = {
   id: PropTypes.string.isRequired,
   archived: PropTypes.bool.isRequired,
   onArchiveNote: PropTypes.func.isRequired,
