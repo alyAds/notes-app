@@ -97,6 +97,12 @@ class AddEditPage extends React.Component {
 
   async onDeleteHandler(e, id) {
     const {error, data} = await deleteNote(e, id);
+
+    if (error || error === undefined) {
+      this.context.setAuthedUser(null);
+      return false;
+    }
+
     this.context.setExceptId(id);
     !error && toast.warn(`Catatan ${data} berhasil dihapus!`);
   }

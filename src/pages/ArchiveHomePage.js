@@ -7,7 +7,7 @@ import {
   deleteNote,
   archiveNote,
   unarchiveNote,
-  getFilterNotes2,
+  getFilterNotes,
   newNotes,
   filterNotesSearch,
   controlSearchParams,
@@ -16,15 +16,22 @@ import { toast } from "react-toastify";
 import SettingContext from "../contexts/SettingContext.js";
 
 function ArchiveHomepage(props) {
-  const { exceptId, setExceptId } = React.useContext(SettingContext);
+  const { exceptId, setExceptId, setAuthedUser } =
+    React.useContext(SettingContext);
   const { title, changeSearchParams } = controlSearchParams(useSearchParams());
   const [isLoading, setIsLoading] = React.useState(true);
   const [allNotes, setAllNotes] = React.useState(null);
 
   async function onDeleteHandler(event, id) {
     const { error, data } = await deleteNote(event, id);
-    !error && toast.warn(`Catatan ${data} berhasil dihapus!`);
-    const { notes } = await getFilterNotes2(props, title, changeSearchParams);
+
+    if (error) {
+      setAuthedUser(null);
+      return false;
+    }
+
+    toast.warn(`Catatan ${data} berhasil dihapus!`);
+    const { notes } = await getFilterNotes(props, title, changeSearchParams);
 
     setAllNotes(newNotes(id, allNotes, notes));
   }
@@ -33,25 +40,47 @@ function ArchiveHomepage(props) {
     e.preventDefault();
     noteElemRef.current.classList.add("hide-note");
 
-    props.show === "archive" ? await unarchiveNote(id) : await archiveNote(id);
+    const { error } =
+      props.show === "archive"
+        ? await unarchiveNote(id)
+        : await archiveNote(id);
+
+    if (error) {
+      setAuthedUser(null);
+      return false;
+    }
 
     setTimeout(() => {
-      getFilterNotes2(props, title, changeSearchParams).then(({ notes }) => {
-        setAllNotes(newNotes(id, allNotes, notes));
+      getFilterNotes(props, title, changeSearchParams).then(({ notes }) => {
+        if (notes !== false) {
+          setAllNotes(newNotes(id, allNotes, notes));
+        } else {
+          setAuthedUser(null);
+        }
       });
     }, 400);
   }
 
   React.useEffect(() => {
     async function fetchNotes() {
-      const { notes } = await getFilterNotes2(props, title, changeSearchParams);
-      setIsLoading(false);
-      setAllNotes(notes);
+      const { notes } = await getFilterNotes(props, title, changeSearchParams);
+      if (notes !== false) {
+        setIsLoading(false);
+        setAllNotes(notes);
+      } else {
+        setAuthedUser(null);
+      }
     }
 
     if (title !== "" && allNotes !== null) {
       setIsLoading(false);
-      setAllNotes(filterNotesSearch(allNotes, title));
+      const filterNotes = filterNotesSearch(allNotes, title);
+
+      if (filterNotes !== false) {
+        setAllNotes(filterNotes);
+      } else {
+        setAuthedUser(null);
+      }
     } else {
       fetchNotes();
 
@@ -65,9 +94,14 @@ function ArchiveHomepage(props) {
 
   React.useEffect(() => {
     if (exceptId !== "") {
-      getFilterNotes2(props, title, changeSearchParams).then(({ notes }) => {
-        setAllNotes(newNotes(exceptId, allNotes, notes));
-        setExceptId("");
+      getFilterNotes(props, title, changeSearchParams).then(({ notes }) => {
+        if (notes !== false) {
+          console.log("here2");
+          setAllNotes(newNotes(exceptId, allNotes, notes));
+          setExceptId("");
+        } else {
+          setAuthedUser(null);
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

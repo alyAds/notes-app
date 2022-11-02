@@ -106,7 +106,7 @@ async function addNote({ title, body }) {
   return { error: false, data: responseJson.data };
 }
 
-async function getActiveNotes() {
+async function getActiveNotes() {  
   const response = await fetchWithToken(`${BASE_URL}/notes`);
   const responseJson = await response.json();
 
@@ -128,9 +128,7 @@ async function getArchivedNotes() {
   return { error: false, data: responseJson.data };
 }
 
-async function getFilterNotes2(props, title, changeSearchParams) {
-  if (getAccessToken() === null || getAccessToken() === "") return false;
-
+async function getFilterNotes(props, title, changeSearchParams) {
   const { data } =
     props.show === "archive"
       ? await getArchivedNotes()
@@ -142,46 +140,13 @@ async function getFilterNotes2(props, title, changeSearchParams) {
   const filterNotes = data.map((note) => {
     note = {
       ...note,
-      style: randomClass[Math.floor(Math.random() * randomClass.length)]
+      style: randomClass[Math.floor(Math.random() * randomClass.length)],
     };
 
     if (note.title.toLowerCase().includes(keyword)) {
-      return { ...note , foundClass: "" };
+      return { ...note, foundClass: "" };
     } else {
       return { ...note, foundClass: "note-item-filter" };
-    }
-  });
-
-  return { notes: filterNotes };
-}
-
-async function getFilterNotes(obj, exceptId = "") {
-  if (getAccessToken() === null || getAccessToken() === "") return false;
-
-  const { data } =
-    obj.props.show === "archive"
-      ? await getArchivedNotes()
-      : await getActiveNotes();
-  const keyword = obj.props.title || obj.props.keyword;
-
-  obj.props.keywordChange(obj.props.title || obj.props.keyword);
-
-  const filterNotes = data.map(({ id, title, body, archived, createdAt }) => {
-    const note = {
-      id,
-      title,
-      body,
-      style: randomClass[Math.floor(Math.random() * randomClass.length)],
-      archived,
-      createdAt,
-    };
-
-    if (title.toLowerCase().includes(keyword)) {
-      return exceptId !== note.id ? { ...note, foundClass: "" } : "";
-    } else {
-      return exceptId !== note.id
-        ? { ...note, foundClass: "note-item-filter" }
-        : "";
     }
   });
 
@@ -199,7 +164,7 @@ async function getNote(id) {
   return { error: false, data: responseJson.data };
 }
 
-async function archiveNote(id) {
+async function archiveNote(id) {  
   const response = await fetchWithToken(`${BASE_URL}/notes/${id}/archive`, {
     method: "POST",
   });
@@ -213,7 +178,7 @@ async function archiveNote(id) {
   return { error: false, data: responseJson.data };
 }
 
-async function unarchiveNote(id) {
+async function unarchiveNote(id) {  
   const response = await fetchWithToken(`${BASE_URL}/notes/${id}/unarchive`, {
     method: "POST",
   });
@@ -229,6 +194,7 @@ async function unarchiveNote(id) {
 
 async function deleteNote(event, id) {
   event.preventDefault();
+
   const title = (await getNote(id)).data.title || "title";
 
   const response = await fetchWithToken(`${BASE_URL}/notes/${id}`, {
@@ -302,14 +268,14 @@ function controlSearchParams(useSearchParams) {
     }
   }
 
-  return {title, changeSearchParams}
+  return { title, changeSearchParams };
 }
 
-const dateTime = (datetime) => datetime < 10 ? '0' + datetime : datetime;
+const dateTime = (datetime) => (datetime < 10 ? "0" + datetime : datetime);
 
 function stringDateTime(datetime) {
   const year = datetime.getFullYear();
-  const month = dateTime(datetime.getMonth()+1);
+  const month = dateTime(datetime.getMonth() + 1);
   const date = dateTime(datetime.getDate());
   const hours = dateTime(datetime.getHours());
   const minute = dateTime(datetime.getMinutes());
@@ -333,7 +299,6 @@ export {
   deleteNote,
   translate,
   getFilterNotes,
-  getFilterNotes2,
   setStateNote,
   filterNotesSearch,
   newNotes,
