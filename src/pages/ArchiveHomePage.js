@@ -96,7 +96,6 @@ function ArchiveHomepage(props) {
     if (exceptId !== "") {
       getFilterNotes(props, title, changeSearchParams).then(({ notes }) => {
         if (notes !== false) {
-          console.log("here2");
           setAllNotes(newNotes(exceptId, allNotes, notes));
           setExceptId("");
         } else {
